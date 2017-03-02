@@ -3,13 +3,17 @@ class ApplicationController < ActionController::API
   def base
 
     puts params.inspect
+    response = nil
+
     case params[:intent]
       when 'Greeting'
-        render json: {nameEins: params[:name1], nameZwei: params[:name2]}
+        response = {nameEins: params[:name1], nameZwei: params[:name2]}
       when 'Select'
-        render getAll(params[:tablename])
+        response =  getAll(params[:tablename])
     end
 
+    render json: response
+    
   end
 
   def getAll(tablename)
