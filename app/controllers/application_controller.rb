@@ -19,10 +19,10 @@ class ApplicationController < ActionController::API
   def getAll(tablename)
 
     response = nil
-    case tablename
-      when 'Kunden'
+    case tablename.downcase
+      when 'kunden'
         response = {counter: 100}
-      when 'Artikel'
+      when 'artikel'
         response = {counter: 900}
       else
         response = {counter: 0}
