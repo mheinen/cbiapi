@@ -28,7 +28,7 @@ class ApplicationController < ActionController::API
         response = {counter: 0}
     end
 
-    render json: response
+    response
 
   end
 
