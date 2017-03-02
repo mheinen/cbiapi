@@ -13,19 +13,22 @@ class ApplicationController < ActionController::API
     end
 
     render json: response
-    
+
   end
 
   def getAll(tablename)
 
+    response = nil
     case tablename
       when 'Kunden'
-        render json: {counter: 100}
+        response = {counter: 100}
       when 'Artikel'
-        render json: {counter: 900}
+        response = {counter: 900}
       else
-        render json: {counter: 0}
+        response = {counter: 0}
     end
+
+    render json: response
 
   end
 
