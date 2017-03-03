@@ -22,11 +22,19 @@ class ApplicationController < ActionController::Base
 
   def getAll(tablename, column, operand, value)
 
-    model = params[:tablename].classify.constantize
+    model = tablename.classify.constantize
     case operand
       when 'größer'
         operand2 = '>'
+      when 'über'
+        operand2 = '>'
+      when 'mehr als'
+        operand2 = '>'
       when 'kleiner'
+        operand2 = '<'
+      when 'kleiner'
+        operand2 = '<'
+      when 'weniger als'
         operand2 = '<'
       when 'größer gleich'
         operand2 = '>='
@@ -38,11 +46,10 @@ class ApplicationController < ActionController::Base
         operand2 = '>='
       when 'höchstens'
         operand2 = '<='
-
       else
         operand2 = '='
     end
-    {counter: model.where("#{column} #{operand2} '#{value}'").count}
+    model.where("#{column} #{operand2} '#{value}'")
 
   end
 
