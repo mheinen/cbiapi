@@ -49,7 +49,7 @@ class ApplicationController < ActionController::Base
       else
         operand2 = '='
     end
-    model.where("#{column} #{operand2} '#{value}'")
+    { counter: model.where("#{column} #{operand2} '#{value}'").count }
 
   end
 

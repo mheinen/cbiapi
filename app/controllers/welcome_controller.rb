@@ -18,7 +18,7 @@ class WelcomeController < ApplicationController
 
     $csv.each do |kunde|
       Kunden.create(kundenid: kunde['KundeId'], vorname: kunde['Vorname'],
-                    nachname: kunde['Nachname'], kundeseit: ['kundeKundeSeit'],
+                    nachname: kunde['Nachname'], kundeseit: kunde['KundeSeit'],
                     umsatz: kunde['Umsatz'], alter: kunde['Alter'])
 
     end
