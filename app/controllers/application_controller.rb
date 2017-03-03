@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
 
   end
 
+
   def getAll(tablename, column, operand, value)
 
     model = params[:tablename].classify.constantize
@@ -37,10 +38,12 @@ class ApplicationController < ActionController::Base
         operand2 = '>='
       when 'höchstens'
         operand2 = '<='
+
       else
         operand2 = '='
     end
     {counter: model.where("#{column} #{operand2} '#{value}'").count}
+
   end
 
 end
