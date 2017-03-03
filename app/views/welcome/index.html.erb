@@ -1,0 +1,68 @@
+<input type="file" id="files" multiple="">
+<button onclick="go()">Hochladen</button>
+<input type="text" class="form-control" id="column">
+<input type="text" class="form-control" id="icon">
+<input type="text" class="form-control" id="value">
+<button onclick="csvSelect()">Auswerten</button>
+<% if !$csv.nil? %>
+    <div class="container">
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <% $csv.first.each do |th| %>
+              <th><%= th[0] %></th>
+          <% end %>
+        </tr>
+        </thead>
+        <tbody>
+        <% $csv.each do |tr| %>
+        <tr>
+          <% tr.each do |td| %>
+          <td><%= td[1] %></td>
+          <% end %>
+        </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+
+<% end %>
+<script>
+  var csvData;
+  function go(){
+      $("input[type=file]").parse({
+          config: {
+              header:true,
+              worker:true,
+              dynamicTyping:true,
+              complete: function(results, file) {
+                  console.log("This file done:", file, results);
+                  csvData = results.data;
+                  $.ajax({
+                      type: "POST",
+                      dataType: "json",
+                      url: '/upload',
+                      data: { csv: results.data},
+                      success: function() {
+                          location.reload();
+                      }
+                  });
+              }
+          },
+          complete: function() {
+              console.log(csvData);
+          }
+      });
+  }
+  function csvSelect(){
+      $.ajax({
+          type: "POST",
+          dataType: "json",
+          url: '/csv_select',
+          data: {column: $('#column').val(), icon: $('#icon').val(), value: $('#value').val()},
+          success: function() {
+              location.reload();
+          }
+      });
+  }
+</script>

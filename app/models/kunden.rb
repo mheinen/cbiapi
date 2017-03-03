@@ -1,0 +1,2 @@
+class Kunden < ApplicationRecord
+end

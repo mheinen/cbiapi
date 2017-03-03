@@ -1,4 +1,5 @@
-class ApplicationController < ActionController::API
+class ApplicationController < ActionController::Base
+  protect_from_forgery with: :null_session
 
   def base
 
@@ -9,27 +10,37 @@ class ApplicationController < ActionController::API
       when 'Greeting'
         response = {nameEins: params[:name1], nameZwei: params[:name2]}
       when 'Select'
-        response =  getAll(params[:tablename])
+        response =  getAll(params[:tablename], params[:column], params[:operand], params[:value])
+      else
+        response = ''
     end
 
     render json: response
 
   end
 
-  def getAll(tablename)
+  def getAll(tablename, column, operand, value)
 
-    response = nil
-    case tablename
-      when 'Kunden'
-        response = {counter: 100}
-      when 'Artikel'
-        response = {counter: 900}
+    model = params[:tablename].classify.constantize
+    case operand
+      when 'größer'
+        operand2 = '>'
+      when 'kleiner'
+        operand2 = '<'
+      when 'größer gleich'
+        operand2 = '>='
+      when 'kleiner gleich'
+        operand2 = '<='
+      when 'gleich'
+        operand2 = '='
+      when 'mindestens'
+        operand2 = '>='
+      when 'höchstens'
+        operand2 = '<='
       else
-        response = {counter: 0}
+        operand2 = '='
     end
-
-    render json: response
-
+    {counter: model.where("#{column} #{operand2} '#{value}'").count}
   end
 
 end
