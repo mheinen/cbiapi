@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
 
     case params[:intent]
       when 'Select'
-        response = intent_select(column, operand, value, with_graph, data)
+        response = intent_select(data, table_name, column, operand, value, with_graph)
       when 'Group'
         response =  intent_group(data, group_column, kind, with_graph)
       else
@@ -60,7 +60,7 @@ class ApplicationController < ActionController::Base
 
   end
 
-  def intent_select(column, operand, value, with_graph, data)
+  def intent_select(data, table_name, column, operand, value, with_graph)
     result = data.count
     number = result == 1 ? "einen" : result
     string = "Ich habe #{number} #{table_name} mit #{column} #{operand} #{value} gefunden!" +
