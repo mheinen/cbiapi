@@ -95,9 +95,9 @@ class ApplicationController < ActionController::Base
     end
 
     if kind == 'group'
-      string = '"'+group_column + '"' + ', ' + func + '("' + agg_column + '") AS ' + func + '_' + agg_column +
+      query = '"'+group_column + '"' + ', ' + func + '("' + agg_column + '") AS ' + func + '_' + agg_column +
           ', COUNT(id) AS anzahl_faelle'
-      result = data.group(group_column).select(string)
+      result = data.group(group_column).select(query)
       puts result.as_json
       length = result.length
       length == 1 ? string = "Ich habe eine Gruppen gebildet!" : string = "Ich habe #{length} Gruppen gebildet!"
