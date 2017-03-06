@@ -68,12 +68,12 @@ class ApplicationController < ActionController::Base
     if with_graph
       #tbd
     end
-    { selectCount: result, speechOutput: string }
+    { selectCount: result, speechOutput: string}
   end
 
   def intent_group(data, group_column, kind, with_graph)
     if kind == 'group'
-      result = data.select("*, SUM(#{group_column}) AS sum_#{group_column}").group(group_column)
+      result = data.select("*, SUM(#{group_column}) AS sum_#{group_column}, count(id) AS anzahl_faelle").group(group_column)
 
 
       length = result.length
