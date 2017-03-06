@@ -73,19 +73,16 @@ class ApplicationController < ActionController::Base
 
   def intent_group(data, group_column, kind, with_graph)
     if kind == 'group'
-      grouped = data.group(group_column)
-      puts '************************'
-      puts grouped.count
-      puts '************************'
+      result = data.select("*, SUM(#{group_column}) AS sum_#{group_column}").group(group_column)
 
-      result = grouped.count.count
-      number = result == 1 ? "einen" : result
-      string = "Ich habe #{number} Gruppen gebildet!" +
-          "Wollen Sie eine neue Analyse durchführen?"
+
+      length = result.length
+      number = length == 1 ? string = "Ich habe eine Gruppen gebildet!" : string = "Ich habe #{number} Gruppen gebildet!"
+      string += "Wollen Sie eine neue Analyse durchführen?"
       if with_graph
         #tbd
       end
-      { selectCount: result, speechOutput: string }
+      { selectCount: length, speechOutput: string }
     end
   end
 
