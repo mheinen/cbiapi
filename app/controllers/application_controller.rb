@@ -74,7 +74,11 @@ class ApplicationController < ActionController::Base
   def intent_group(data, group_column, kind, with_graph)
     if kind == 'group'
       grouped = data.group(group_column)
-      result = grouped.count
+      puts '************************'
+      puts grouped.count
+      puts '************************'
+
+      result = grouped.count.count
       number = result == 1 ? "einen" : result
       string = "Ich habe #{number} Gruppen gebildet!" +
           "Wollen Sie eine neue Analyse durchführen?"
