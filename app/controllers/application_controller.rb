@@ -49,7 +49,10 @@ class ApplicationController < ActionController::Base
       else
         operand2 = '='
     end
-    { counter: model.where("#{column} #{operand2} '#{value}'").count }
+    result = model.where("#{column} #{operand2} '#{value}'").count
+    number = result == 1 ? "einen" : result
+    string = "Ich habe #{number} #{column} gefunden."
+    { selectCount: result, speechOutput: string }
 
   end
 
