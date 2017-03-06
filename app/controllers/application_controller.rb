@@ -10,6 +10,8 @@ class ApplicationController < ActionController::Base
     with_graph = params[:withGraph]
     kind = params[:kind]
     group_column = params[:groupColumn]
+    function = params[:function]
+    agg_column = params[:aggColumn]
 
     data = select_data(table_name, column, operand, value)
 
@@ -17,7 +19,7 @@ class ApplicationController < ActionController::Base
       when 'Select'
         response = intent_select(data, table_name, column, operand, value, with_graph)
       when 'Group'
-        response =  intent_group(data, group_column, kind, with_graph)
+        response =  intent_group(data, group_column, kind, with_graph, function, agg_column)
       else
         response = { selectCount: '', speechOutput: '' }
     end
@@ -28,9 +30,11 @@ class ApplicationController < ActionController::Base
 
   def select_data(table, column, operand, value)
 
-    $model = table.classify.constantize
+    model = table.classify.constantize
     case operand
       when 'größer'
+        operand2 = '>'
+      when 'größer als'
         operand2 = '>'
       when 'über'
         operand2 = '>'
@@ -38,7 +42,7 @@ class ApplicationController < ActionController::Base
         operand2 = '>'
       when 'kleiner'
         operand2 = '<'
-      when 'kleiner'
+      when 'kleiner als'
         operand2 = '<'
       when 'weniger als'
         operand2 = '<'
@@ -56,7 +60,7 @@ class ApplicationController < ActionController::Base
         operand2 = '='
     end
 
-    $model.where("#{column} #{operand2} '#{value}'")
+    model.where("#{column} #{operand2} '#{value}'")
 
   end
 
@@ -71,13 +75,32 @@ class ApplicationController < ActionController::Base
     { selectCount: result, speechOutput: string}
   end
 
-  def intent_group(data, group_column, kind, with_graph)
+  def intent_group(data, group_column, kind, with_graph, function, agg_column)
+
+    case function.downcase
+      when 'summe'
+        func = 'SUM'
+      when 'durchschnitt'
+        func = 'AVG'
+      when 'minimum'
+        func = 'MIN'
+      when 'maximum'
+        func = 'MAX'
+      when 'zählen'
+        func = 'COUNT'
+      when 'anzahl'
+        func = 'COUNT'
+      else
+        func = 'COUNT'
+    end
+
     if kind == 'group'
-      result = data.select("*, SUM(#{group_column}) AS sum_#{group_column}, count(#{:id}) AS anzahl_faelle").group(group_column)
-
-
+      string = '"'+group_column + '"' + ', ' + func + '("' + agg_column + '") AS ' + func + '_' + agg_column +
+          ', COUNT(id) AS anzahl_faelle'
+      result = data.group(group_column).select(string)
+      puts result.as_json
       length = result.length
-      number = length == 1 ? string = "Ich habe eine Gruppen gebildet!" : string = "Ich habe #{number} Gruppen gebildet!"
+      length == 1 ? string = "Ich habe eine Gruppen gebildet!" : string = "Ich habe #{length} Gruppen gebildet!"
       string += "Wollen Sie eine neue Analyse durchführen?"
       if with_graph
         #tbd
