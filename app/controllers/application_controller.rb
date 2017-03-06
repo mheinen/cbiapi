@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
 
   def select_data(table, column, operand, value)
 
-    model = table.classify.constantize
+    $model = table.classify.constantize
     case operand
       when 'größer'
         operand2 = '>'
@@ -56,7 +56,7 @@ class ApplicationController < ActionController::Base
         operand2 = '='
     end
 
-    model.where("#{column} #{operand2} '#{value}'")
+    $model.where("#{column} #{operand2} '#{value}'")
 
   end
 
@@ -73,7 +73,7 @@ class ApplicationController < ActionController::Base
 
   def intent_group(data, group_column, kind, with_graph)
     if kind == 'group'
-      result = data.select("*, SUM(#{group_column}) AS sum_#{group_column}, count(id) AS anzahl_faelle").group(group_column)
+      result = data.select("*, SUM(#{group_column}) AS sum_#{group_column}, count(#{:id}) AS anzahl_faelle").group(group_column)
 
 
       length = result.length
