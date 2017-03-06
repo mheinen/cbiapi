@@ -10,7 +10,9 @@ class ApplicationController < ActionController::Base
       when 'Greeting'
         response = {nameEins: params[:name1], nameZwei: params[:name2]}
       when 'Select'
-        response =  getAll(params[:tablename], params[:column], params[:operand], params[:value])
+        response =  intentSelect(params[:tablename], params[:column], params[:operand], params[:value])
+      when 'Group'
+        response =  intentSelect(params[:tablename], params[:column], params[:operand], params[:value])
       else
         response = ''
     end
@@ -20,7 +22,7 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def getAll(tablename, column, operand, value)
+  def intentSelect(tablename, column, operand, value)
 
     model = tablename.classify.constantize
     case operand
@@ -51,7 +53,7 @@ class ApplicationController < ActionController::Base
     end
     result = model.where("#{column} #{operand2} '#{value}'").count
     number = result == 1 ? "einen" : result
-    string = "Ich habe #{number} #{column} gefunden."
+    string = "Ich habe #{number} #{column} gefunden! Wollen Sie eine neue Analyse durchführen?"
     { selectCount: result, speechOutput: string }
 
   end
