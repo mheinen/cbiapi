@@ -3,28 +3,32 @@ class ApplicationController < ActionController::Base
 
   def base
 
-    puts params.inspect
-    response = nil
+    table_name = params[:table]
+    column = params[:column]
+    operand = params[:operand]
+    value = params[:value]
+    with_graph = params[:withGraph]
+    kind = params[:kind]
+    group_column = params[:groupColumn]
+
+    data = select_data(table_name, column, operand, value)
 
     case params[:intent]
-      when 'Greeting'
-        response = {nameEins: params[:name1], nameZwei: params[:name2]}
       when 'Select'
-        response =  intentSelect(params[:tablename], params[:column], params[:operand], params[:value])
+        response = intent_select(column, operand, value, with_graph, data)
       when 'Group'
-        response =  intentSelect(params[:tablename], params[:column], params[:operand], params[:value])
+        response =  intent_group(data, group_column, kind, with_graph)
       else
-        response = ''
+        response = { selectCount: '', speechOutput: '' }
     end
 
     render json: response
 
   end
 
+  def select_data(table, column, operand, value)
 
-  def intentSelect(tablename, column, operand, value)
-
-    model = tablename.classify.constantize
+    model = table.classify.constantize
     case operand
       when 'größer'
         operand2 = '>'
@@ -51,11 +55,34 @@ class ApplicationController < ActionController::Base
       else
         operand2 = '='
     end
-    result = model.where("#{column} #{operand2} '#{value}'").count
-    number = result == 1 ? "einen" : result
-    string = "Ich habe #{number} #{column} gefunden! Wollen Sie eine neue Analyse durchführen?"
-    { selectCount: result, speechOutput: string }
 
+    model.where("#{column} #{operand2} '#{value}'")
+
+  end
+
+  def intent_select(column, operand, value, with_graph, data)
+    result = data.count
+    number = result == 1 ? "einen" : result
+    string = "Ich habe #{number} #{table_name} mit #{column} #{operand} #{value} gefunden!" +
+        "Wollen Sie eine neue Analyse durchführen?"
+    if with_graph
+      #tbd
+    end
+    { selectCount: result, speechOutput: string }
+  end
+
+  def intent_group(data, group_column, kind, with_graph)
+    if kind == 'group'
+      grouped = data.group(group_column)
+      result = grouped.count
+      number = result == 1 ? "einen" : result
+      string = "Ich habe #{number} Gruppen gebildet!" +
+          "Wollen Sie eine neue Analyse durchführen?"
+      if with_graph
+        #tbd
+      end
+      { selectCount: result, speechOutput: string }
+    end
   end
 
 end
