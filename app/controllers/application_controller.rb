@@ -63,10 +63,11 @@ class ApplicationController < ActionController::Base
 
   end
 
-  def intent_select(data, table_name, column, operand, value, with_graph)
+  def intent_select(data, table_name, column = nil, operand = nil, value = nil, with_graph)
     result = data.count
     number = result == 1 ? "einen" : result
-    string = "Ich habe #{number} #{table_name} mit #{column} #{operand} #{value} gefunden!" +
+    columnNil = column.nil? ? '' : 'mit'
+    string = "Ich habe #{number} #{table_name} #{columnNil} #{column} #{operand} #{value} gefunden!" +
         "Wollen Sie eine neue Analyse durchführen?"
     if with_graph
       #tbd

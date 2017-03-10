@@ -9,6 +9,30 @@
   </head>
 
   <body>
-    <%= yield %>
+  <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#">Webcomputing Datenanalyse</a>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <%= link_to 'Home', root_path, class: 'nav-item nav-link' %>
+        <%= link_to 'Einloggen', new_user_session_path, class: 'nav-item nav-link' unless !current_user.nil? %>
+        <%= link_to 'Ausloggen', destroy_user_session_path, method: :delete, class: 'nav-item nav-link'  unless current_user.nil?%>
+        <%= link_to 'Registrieren', new_user_registration_path, class: 'nav-item nav-link' unless !current_user.nil? %>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-3 push-md-9 bd-sidebar">
+        <p class="notice"><%= notice %></p>
+        <p class="alert"><%= alert %></p>
+      </div>
+      <div class="col-12 col-md-9 pull-md-3 bd-content">
+        <%= yield %>
+      </div>
+    </div>
+  </div>
   </body>
 </html>
