@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
+  prepend_before_action :set_access_token_in_params
+  before_action :doorkeeper_authorize!
 
   def base
 
@@ -107,6 +109,20 @@ class ApplicationController < ActionController::Base
       end
       { selectCount: length, speechOutput: string }
     end
+  end
+
+  def current_doorkeeper_user
+    @current_doorkeeper_user ||= User.find(doorkeeper_token.resource_owner_id)
+  end
+
+  private
+
+  def set_doorkeeper_token
+    request.parameters[:access_token] = token_from_params
+  end
+
+  def token_from_params
+    params["session"]["user"]["accessToken"] rescue nil
   end
 
 end
