@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
-  prepend_before_action :set_access_token_in_params
   before_action :doorkeeper_authorize!
 
   def base
