@@ -4,4 +4,5 @@ Rails.application.routes.draw do
   post '/', to: 'application#base'
   post '/upload', to: 'welcome#upload'
   post '/csv_select', to: 'welcome#csv_select'
+  post '/connect', to: 'db_connector#connect'
 end

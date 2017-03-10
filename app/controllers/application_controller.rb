@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
 
   end
 
-  def select_data(table, column, operand, value)
+  def select_data(table, column = nil, operand = nil, value = nil)
 
     model = table.classify.constantize
     case operand
@@ -59,8 +59,7 @@ class ApplicationController < ActionController::Base
       else
         operand2 = '='
     end
-
-    model.where("#{column} #{operand2} '#{value}'")
+    column.nil? ? model.all : model.where("#{column} #{operand2} '#{value}'")
 
   end
 

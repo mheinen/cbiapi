@@ -4,6 +4,27 @@
 <input type="text" class="form-control" id="icon">
 <input type="text" class="form-control" id="value">
 <button onclick="csvSelect()">Auswerten</button>
+<div>
+  <p>
+    <input type="text" class="form-control" id="adapter" placeholder="adapter">
+  </p>
+  <p>
+    <input type="text" class="form-control" id="encoding" placeholder="encoding">
+  </p>
+  <p>
+    <input type="text" class="form-control" id="database" placeholder="database">
+  </p>
+  <p>
+    <input type="text" class="form-control" id="host" placeholder="host">
+  </p>
+  <p>
+    <input type="text" class="form-control" id="username" placeholder="username">
+  </p>
+  <p>
+    <input type="text" class="form-control" id="password" placeholder="password">
+  </p>
+  <button onclick="dbConnect()">Verbinden</button>
+</div>
 <% if !$csv.nil? %>
     <div class="container">
       <table class="table table-bordered">
@@ -59,6 +80,24 @@
           dataType: "json",
           url: '/csv_select',
           data: {column: $('#column').val(), icon: $('#icon').val(), value: $('#value').val()},
+          success: function() {
+              location.reload();
+          }
+      });
+  }
+  function dbConnect(){
+      adapter = $('#adapter').val();
+      encoding = $('#encoding').val();
+      database = $('#database').val();
+      host = $('#host').val();
+      username = $('#username').val();
+      password = $('#password').val();
+      $.ajax({
+          type: "POST",
+          dataType: "json",
+          url: '/connect',
+          data: {adapter: adapter, encoding: encoding, database: database, host: host,
+              username: username, password: password},
           success: function() {
               location.reload();
           }
