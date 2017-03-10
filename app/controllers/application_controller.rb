@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
+  prepend_before_action :set_doorkeeper_token
+  before_action :doorkeeper_authorize!
 
   def base
 
@@ -120,7 +122,7 @@ class ApplicationController < ActionController::Base
   end
 
   def token_from_params
-    params["session"]["user"]["accessToken"] rescue nil
+    params["accessToken"] rescue nil
   end
 
 end
